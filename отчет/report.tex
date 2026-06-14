@@ -1,0 +1,133 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[russian]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\geometry{top=2cm, bottom=2cm, left=2.5cm, right=2cm}
+
+\lstset{
+    language=C++,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    frame=single,
+    breaklines=true
+}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    {\Large \textbf{Практическая работа}} \\[0.5cm]
+    {\huge \textbf{Численное дифференцирование}} \\[1.5cm]
+    {\Large Вычисление первой производной функции в точке} \\[2cm]
+    {\large Выполнил: Уваров Д.К} \\[1cm]
+    {\large Группа: УТС 1 курс} \\[15cm]
+    {\large \today}
+\end{titlepage}
+
+\section{Цель работы}
+
+Реализовать алгоритм численного вычисления первой производной функции в точке с использованием трёх двухточечных методов.
+
+\section{Теоретические сведения}
+
+Производная функции $y(x)$ в точке $x_0$ равна тангенсу угла наклона касательной к графику функции в этой точке:
+\[
+f'(x_0) = \tan(\alpha)
+\]
+
+Численное дифференцирование — это аппроксимация производной с использованием значений функции в соседних точках.
+
+\subsection{Формулы методов}
+
+Пусть $h$ — малое приращение аргумента. Тогда:
+
+\begin{itemize}
+    \item \textbf{Метод 1 (прямая разность)}:
+    \[
+    f'(x) \approx \frac{f(x+h) - f(x)}{h}
+    \]
+    
+    \item \textbf{Метод 2 (обратная разность)}:
+    \[
+    f'(x) \approx \frac{f(x) - f(x-h)}{h}
+    \]
+    
+    \item \textbf{Метод 3 (центральная разность)}:
+    \[
+    f'(x) \approx \frac{f(x+h) - f(x-h)}{2h}
+    \]
+\end{itemize}
+
+\subsection{Погрешность методов}
+
+Центральная разность даёт более точный результат, так как погрешность имеет порядок $O(h^2)$, в то время как односторонние методы — $O(h)$.
+
+\section{Реализация}
+
+Программа написана на языке C++. Основные функции:
+
+\begin{lstlisting}
+// Прямая разность (вправо)
+double derivativeForward(const Function& f, double x, double h) {
+    return (f(x + h) - f(x)) / h;
+}
+
+// Обратная разность (влево)
+double derivativeBackward(const Function& f, double x, double h) {
+    return (f(x) - f(x - h)) / h;
+}
+
+// Центральная разность
+double derivativeCentral(const Function& f, double x, double h) {
+    return (f(x + h) - f(x - h)) / (2.0 * h);
+}
+\end{lstlisting}
+
+\section{Результаты тестирования}
+
+\subsection{Функция $f(x) = x^2$ в точке $x = 2$}
+
+Точное значение производной: $f'(2) = 4$
+
+При $h = 0.001$ получены следующие результаты:
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Метод} & \textbf{Значение} & \textbf{Абсолютная погрешность} & \textbf{Относительная погрешность} \\
+\hline
+Прямая разность & 4.001 & 0.001 & 0.025\% \\
+Обратная разность & 3.999 & 0.001 & 0.025\% \\
+Центральная разность & 4.000 & $3.7 \times 10^{-13}$ & $9.26 \times 10^{-12}\%$ \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Анализ точности}
+
+Как видно из таблицы, метод центральной разности даёт значительно меньшую погрешность по сравнению с односторонними методами. Это объясняется тем, что при центральной разности погрешность имеет второй порядок малости $O(h^2)$, тогда как у односторонних методов — первый $O(h)$.
+
+\section{Выводы}
+
+В ходе выполнения работы:
+
+\begin{enumerate}
+    \item Реализованы три метода численного дифференцирования.
+    \item Проведено сравнение точности методов на тестовой функции $f(x) = x^2$.
+    \item Установлено, что метод центральной разности является наиболее точным.
+    \item Программа включает проверку входных данных и обработку ошибок.
+    \item Предусмотрен интерактивный режим для работы с различными функциями.
+\end{enumerate}
+
+\end{document}
