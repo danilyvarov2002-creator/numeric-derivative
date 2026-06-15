@@ -1,0 +1,176 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[russian]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{setspace}
+
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+
+\lstset{
+    language=C++,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    frame=single,
+    breaklines=true,
+    showstringspaces=false
+}
+
+\begin{document}
+
+\pagestyle{empty}
+\begin{center}
+    \setstretch{1.1}
+    {\fontsize{12pt}{14pt}\selectfont
+        МИНИСТЕРСТВО НАУКИ И ВЫСШЕГО ОБРАЗОВАНИЯ\\
+        РОССИЙСКОЙ ФЕДЕРАЦИИ\\
+        Федеральное государственное бюджетное образовательное учреждение\\
+        высшего образования\\
+        \textbf{АДЫГЕЙСКИЙ ГОСУДАРСТВЕННЫЙ УНИВЕРСИТЕТ}\\
+    }
+    \vspace{0.3cm}
+    {\fontsize{12pt}{14pt}\selectfont
+        Инженерно-физический факультет\\
+        Кафедра автоматизированных систем обработки информации и\\
+        управления\\
+    }
+\end{center}
+\vspace{4.5cm}
+\begin{center}
+    \setstretch{1.3}
+    {\fontsize{14pt}{16pt}\selectfont ОТЧЕТ ПО ПРАКТИКЕ\\}
+    \vspace{0.5cm}
+    {\fontsize{16pt}{18pt}\selectfont \textbf{Программная реализация численного метода}\\}
+    {\fontsize{14pt}{16pt}\selectfont \textit{Текст из задания по варианту 8}\\}
+    \vspace{0.8cm}
+    {\fontsize{12pt}{14pt}\selectfont 1 курс, группа УТС\\}
+\end{center}
+\vspace{3cm}
+\hfill
+\begin{minipage}{0.48\textwidth}
+    \setstretch{1.2}
+    {\normalsize Выполнил:\\
+    \underline{\hspace{3.5cm}} Д. К. Уваров\\
+    «\underline{\hspace{0.8cm}}» \underline{\hspace{2.2cm}} 2026 г.\\
+    \vspace{0.5cm}
+    Руководитель:\\
+    \underline{\hspace{3.5cm}} С. В. Теплоухов\\
+    «\underline{\hspace{0.8cm}}» \underline{\hspace{2.2cm}} 2026 г.}
+\end{minipage}
+
+\vspace{1.5cm}
+
+\begin{center}
+    {\normalsize Майкоп, 2026 г.}
+\end{center}
+
+\newpage
+
+\pagestyle{plain}
+\setcounter{page}{2}
+
+\section{Цель работы}
+
+Реализовать алгоритм численного вычисления первой производной функции в точке с использованием трёх двухточечных методов.
+
+\section{Теоретические сведения}
+
+Производная функции $y(x)$ в точке $x_0$ равна тангенсу угла наклона касательной к графику функции в этой точке:
+\[
+f'(x_0) = \tan(\alpha)
+\]
+
+Численное дифференцирование — это аппроксимация производной с использованием значений функции в соседних точках.
+
+\subsection{Формулы методов}
+
+Пусть $h$ — малое приращение аргумента. Тогда:
+
+\begin{itemize}
+    \item \textbf{Метод 1 (прямая разность, вправо)}:
+    \[
+    f'(x) \approx \frac{f(x+h) - f(x)}{h}
+    \]
+    
+    \item \textbf{Метод 2 (обратная разность, влево)}:
+    \[
+    f'(x) \approx \frac{f(x) - f(x-h)}{h}
+    \]
+    
+    \item \textbf{Метод 3 (центральная разность)}:
+    \[
+    f'(x) \approx \frac{f(x+h) - f(x-h)}{2h}
+    \]
+\end{itemize}
+
+\subsection{Погрешность методов}
+
+Центральная разность даёт более точный результат, так как погрешность имеет порядок $O(h^2)$, в то время как односторонние методы — $O(h)$.
+
+\section{Реализация}
+
+Программа написана на языке C++. Основные функции:
+
+\begin{lstlisting}
+// Прямая разность (вправо)
+double derivativeForward(const Function& f, double x, double h) {
+    return (f(x + h) - f(x)) / h;
+}
+
+// Обратная разность (влево)
+double derivativeBackward(const Function& f, double x, double h) {
+    return (f(x) - f(x - h)) / h;
+}
+
+// Центральная разность
+double derivativeCentral(const Function& f, double x, double h) {
+    return (f(x + h) - f(x - h)) / (2.0 * h);
+}
+\end{lstlisting}
+
+\section{Результаты тестирования}
+
+\subsection{Функция $f(x) = x^2$ в точке $x = 2$}
+
+Точное значение производной: $f'(2) = 4$
+
+При $h = 0.001$ получены следующие результаты:
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Метод} & \textbf{Значение} & \textbf{Абсолютная погрешность} & \textbf{Относительная погрешность} \\
+\hline
+Прямая разность & 4.001 & 0.001 & 0.025\% \\
+Обратная разность & 3.999 & 0.001 & 0.025\% \\
+Центральная разность & 4.000 & $3.7 \times 10^{-13}$ & $9.26 \times 10^{-12}\%$ \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Анализ точности}
+
+Как видно из таблицы, метод центральной разности даёт значительно меньшую погрешность по сравнению с односторонними методами.
+
+\section{Выводы}
+
+В ходе выполнения работы:
+
+\begin{enumerate}
+    \item Реализованы три метода численного дифференцирования.
+    \item Проведено сравнение точности методов на тестовой функции $f(x) = x^2$.
+    \item Установлено, что метод центральной разности является наиболее точным.
+    \item Программа включает проверку входных данных и обработку ошибок.
+    \item Предусмотрен интерактивный режим для работы с различными функциями.
+\end{enumerate}
+
+\end{document}
